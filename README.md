@@ -1,1 +1,0 @@
-# WGTIK-Kelompok_9
