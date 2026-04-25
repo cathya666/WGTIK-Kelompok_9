@@ -3,7 +3,9 @@
 
 import pandas as pd
 
-df_a = pd.read_csv("malnutrition.csv")
+url_a = "DATASETS/malnutrition_data (1).csv"
+url_b = ""
+df_a = pd.read_csv(url_a)
 df_b = pd.read_csv("stunting.csv")
 
 df_a = df_a.rename(columns={
