@@ -3,8 +3,8 @@
 
 import pandas as pd
 
-url_a = "DATASETS/malnutrition_data (1).csv"
-url_b = ""
+url_a = "https://raw.githubusercontent.com/cathya666/WGTIK-Kelompok_9/4d1eb9c0a9ed1ebc9c3c717dc3211e48b657b91c/DATASETS/malnutrition_data%20(1).csv"
+url_b = "https://raw.githubuercontent.com/cathya666/WGTIK-Kelompok_9/4d1eb9c0a9ed1ebc9c3c717dc3211e48b657b91c/DATASETS/data_balita.csv"
 df_a = pd.read_csv(url_a)
 df_b = pd.read_csv("stunting.csv")
 
