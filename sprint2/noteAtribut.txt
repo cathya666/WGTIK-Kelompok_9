@@ -1,0 +1,6 @@
+AGE - Bulan
+AGE GROUP - hanya label, kategori umur
+HEIGHT - cm
+WEIGHT - kg
+BMI - kg/m^2
+STUNTING - label, biner 0/1
