@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StuntCheck — Deteksi Stunting Anak</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f7ff;
+  --white:#ffffff;
+  --surface:#f8fafc;
+  --border:#e2eaf3;
+  --accent:#0ea5e9;
+  --accent-dark:#0284c7;
+  --accent-light:#e0f2fe;
+  --green:#10b981;
+  --green-light:#d1fae5;
+  --red:#f43f5e;
+  --red-light:#ffe4e9;
+  --yellow:#f59e0b;
+  --text:#0f172a;
+  --text2:#475569;
+  --text3:#94a3b8;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --r:14px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* DECORATIVE BG */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 0%,rgba(14,165,233,.12) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 100%,rgba(16,185,129,.1) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:100;
+  padding:16px 40px;
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 1px 12px rgba(14,165,233,.08);
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,#0ea5e9,#6366f1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;box-shadow:0 4px 12px rgba(14,165,233,.3);
+}
+.logo-name{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--text)}
+.logo-name span{color:var(--accent)}
+.api-status{
+  margin-left:auto;display:flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;color:var(--text2);
+  background:var(--surface);border:1px solid var(--border);
+  padding:6px 12px;border-radius:20px;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:#94a3b8}
+.dot.online{background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.2)}
+
+/* MAIN */
+main{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+
+/* HERO */
+.hero{grid-column:1/-1;text-align:center;padding:48px 20px 32px;animation:up .5s ease both}
+.hero h1{font-size:clamp(28px,4.5vw,48px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:14px;color:var(--text)}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{color:var(--text2);font-size:16px;max-width:480px;margin:0 auto;line-height:1.65}
+
+/* CARD */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:28px;box-shadow:0 2px 16px rgba(0,0,0,.05);animation:up .5s .12s ease both}
+.card-header{display:flex;align-items:center;gap:8px;margin-bottom:24px}
+.card-icon{width:32px;height:32px;border-radius:8px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:16px}
+.card-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.card-sub{font-size:12px;color:var(--text3);margin-left:auto}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12px;font-weight:700;color:var(--text2);letter-spacing:.3px}
+.input-wrap{position:relative}
+.input-wrap .unit{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:11px;color:var(--text3);font-weight:500;
+}
+input[type=number]{
+  width:100%;background:var(--surface);border:1.5px solid var(--border);
+  color:var(--text);font-family:var(--font);font-size:14px;font-weight:500;
+  padding:11px 48px 11px 14px;border-radius:10px;outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+input[type=number]:focus{border-color:var(--accent);background:var(--white);box-shadow:0 0 0 3px rgba(14,165,233,.15)}
+input[readonly]{color:var(--accent);background:var(--accent-light);border-color:rgba(14,165,233,.3);cursor:default}
+input[type=number]:focus{outline:none}
+
+/* BTN */
+.btn{
+  width:100%;margin-top:18px;padding:14px;border:none;border-radius:10px;
+  font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;
+  background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;
+  box-shadow:0 4px 16px rgba(14,165,233,.35);
+  transition:opacity .2s,transform .15s,box-shadow .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn:hover{opacity:.92;box-shadow:0 6px 20px rgba(14,165,233,.4)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.spinner{width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:none}
+.btn.loading .spinner{display:block}
+.btn.loading .btn-text{opacity:0}
+
+/* RESULT */
+.result-box{margin-top:18px;border-radius:12px;padding:18px;display:none;animation:up .35s ease both;border:1.5px solid}
+.result-box.normal{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-color:rgba(16,185,129,.35)}
+.result-box.stunting{background:linear-gradient(135deg,#fff1f2,#ffe4e9);border-color:rgba(244,63,94,.3)}
+.result-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.result-emoji{font-size:26px}
+.result-label{font-size:18px;font-weight:800;letter-spacing:-.5px}
+.result-box.normal .result-label{color:#059669}
+.result-box.stunting .result-label{color:#e11d48}
+.result-sub{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.55}
+.prob-bars{display:flex;flex-direction:column;gap:9px}
+.prob-item{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500}
+.prob-item span:first-child{width:76px;color:var(--text2)}
+.prob-track{flex:1;height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.prob-fill{height:100%;border-radius:4px;transition:width 1.1s cubic-bezier(.4,0,.2,1)}
+.prob-fill.n{background:linear-gradient(90deg,#10b981,#34d399)}
+.prob-fill.s{background:linear-gradient(90deg,#f43f5e,#fb7185)}
+.prob-pct{font-family:var(--mono);font-size:12px;width:38px;text-align:right;color:var(--text2)}
+.error-msg{margin-top:12px;padding:12px 14px;background:#fff1f2;border:1.5px solid rgba(244,63,94,.3);border-radius:10px;font-size:13px;color:#e11d48;display:none;line-height:1.5}
+
+/* CHAT */
+.chat-card{display:flex;flex-direction:column;height:560px}
+.chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 0 10px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.msg{max-width:86%;padding:11px 15px;border-radius:14px;font-size:14px;line-height:1.6;animation:up .3s ease both}
+.msg.bot{background:var(--surface);border:1px solid var(--border);border-bottom-left-radius:4px;align-self:flex-start}
+.msg.user{background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.msg .sender{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;color:var(--text3)}
+.msg.bot .sender{color:var(--accent)}
+.msg.user .sender{color:rgba(255,255,255,.7)}
+.typing{display:flex;gap:4px;align-items:center;padding:4px 0}
+.typing span{width:6px;height:6px;background:var(--text3);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+.chat-input-area{display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border)}
+.chat-input-area input{
+  flex:1;background:var(--surface);border:1.5px solid var(--border);
+  color:var(--text);font-family:var(--font);font-size:14px;
+  padding:10px 14px;border-radius:10px;outline:none;transition:border-color .2s;
+}
+.chat-input-area input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,233,.12)}
+.chat-input-area input::placeholder{color:var(--text3)}
+.chat-send{
+  padding:10px 16px;background:linear-gradient(135deg,#0ea5e9,#6366f1);
+  border:none;border-radius:10px;color:#fff;font-size:15px;
+  cursor:pointer;transition:opacity .2s;font-weight:700;
+  box-shadow:0 3px 10px rgba(14,165,233,.3);
+}
+.chat-send:hover{opacity:.88}
+.chat-send:disabled{opacity:.4;cursor:not-allowed}
+
+/* QUICK CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{
+  font-size:12px;font-weight:600;color:var(--accent-dark);
+  background:var(--accent-light);border:1px solid rgba(14,165,233,.25);
+  padding:5px 12px;border-radius:20px;cursor:pointer;transition:background .15s;
+}
+.chip:hover{background:#bae6fd}
+
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+
+@media(max-width:768px){
+  main{grid-template-columns:1fr;padding:20px 14px 60px}
+  .form-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+  header{padding:14px 18px}
+  .hero{padding:32px 0 16px}
+  .chat-card{height:440px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🩺</div>
+    <div class="logo-name">Stunt<span>Check</span></div>
+  </div>
+  <div class="api-status">
+    <div class="dot" id="statusDot"></div>
+    <span id="statusText">Mengecek API...</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Deteksi <em>Stunting Anak</em><br>dengan Cepat & Akurat</h1>
+    <p>Masukkan data antropometri anak untuk mendapatkan prediksi status stunting secara instan.</p>
+  </section>
+
+  <!-- FORM -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Form Prediksi Stunting</div>
+      <div class="card-sub">Isi semua field</div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Umur Anak</label>
+        <div class="input-wrap">
+          <input type="number" id="age" placeholder="Contoh: 24" min="0" max="59" step="1" />
+          <span class="unit">bulan</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Tinggi Badan</label>
+        <div class="input-wrap">
+          <input type="number" id="height" placeholder="Contoh: 82.5" min="45" max="120" step="0.1" />
+          <span class="unit">cm</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Berat Badan</label>
+        <div class="input-wrap">
+          <input type="number" id="weight" placeholder="Contoh: 11.2" min="2" max="25" step="0.1" />
+          <span class="unit">kg</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Jenis Kelamin</label>
+        <div class="input-wrap">
+          <select id="gender" style="width:100%;background:var(--surface);border:1.5px solid var(--border);color:var(--text);font-family:var(--font);font-size:14px;font-weight:500;padding:11px 14px;border-radius:10px;outline:none;">
+            <option value="">-- Pilih --</option>
+            <option value="Perempuan">Perempuan</option>
+            <option value="Laki-laki">Laki-laki</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-msg" id="formError"></div>
+
+    <button class="btn" id="predictBtn" onclick="submitPredict()">
+      <div class="spinner"></div>
+      <span class="btn-text">🔍 Prediksi Sekarang</span>
+    </button>
+
+    <div class="result-box" id="resultBox">
+      <div class="result-top">
+        <div class="result-emoji" id="resultEmoji"></div>
+        <div class="result-label" id="resultLabel"></div>
+      </div>
+      <div class="result-sub" id="resultSub"></div>
+      <div class="prob-bars">
+        <div class="prob-item">
+          <span>Normal</span>
+          <div class="prob-track"><div class="prob-fill n" id="barNormal" style="width:0%"></div></div>
+          <span class="prob-pct" id="pctNormal">0%</span>
+        </div>
+        <div class="prob-item">
+          <span>Stunting</span>
+          <div class="prob-track"><div class="prob-fill s" id="barStunting" style="width:0%"></div></div>
+          <span class="prob-pct" id="pctStunting">0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHATBOT -->
+  <div class="card chat-card">
+    <div class="card-header">
+      <div class="card-icon">💬</div>
+      <div class="card-title">Asisten Kesehatan AI</div>
+      <div class="card-sub">Tanya apa saja</div>
+    </div>
+
+    <div class="chips">
+      <div class="chip" onclick="askChip('Apa itu stunting?')">Apa itu stunting?</div>
+      <div class="chip" onclick="askChip('Cara mencegah stunting?')">Cara mencegah?</div>
+      <div class="chip" onclick="askChip('Makanan bergizi untuk anak?')">Makanan bergizi</div>
+      <div class="chip" onclick="askChip('Kapan harus ke dokter?')">Kapan ke dokter?</div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg bot">
+        <div class="sender">StuntBot</div>
+        Halo! 👋 Saya siap membantu kamu memahami tentang <strong>stunting</strong>, gizi anak, dan hasil prediksi. Silakan tanya atau klik pertanyaan di atas!
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Ketik pertanyaan kamu..." onkeydown="if(event.key==='Enter') sendChat()" />
+      <button class="chat-send" id="sendBtn" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const API_BASE = 'http://localhost:8000';
+
+// Check API status
+async function checkStatus() {
+  try {
+    const r = await fetch(API_BASE + '/health', { signal: AbortSignal.timeout(3000) });
+    if (r.ok) {
+      document.getElementById('statusDot').classList.add('online');
+      document.getElementById('statusText').textContent = 'API Online';
+    } else throw new Error();
+  } catch {
+    document.getElementById('statusText').textContent = 'API Offline';
+  }
+}
+checkStatus();
+
+// Predict
+async function submitPredict() {
+  const age    = parseFloat(document.getElementById('age').value);
+  const height = parseFloat(document.getElementById('height').value);
+  const weight = parseFloat(document.getElementById('weight').value);
+  const gender = document.getElementById('gender').value;
+  const errEl  = document.getElementById('formError');
+  errEl.style.display = 'none';
+
+  if (!age || !height || !weight || !gender) {
+    errEl.textContent = '⚠️ Semua field wajib diisi sebelum melakukan prediksi.';
+    errEl.style.display = 'block'; return;
+  }
+  const btn = document.getElementById('predictBtn');
+  btn.disabled = true; btn.classList.add('loading');
+  document.getElementById('resultBox').style.display = 'none';
+  try {
+    const res = await fetch(API_BASE + '/predict', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({age, gender, height, weight})
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(JSON.stringify(e.detail) || 'Server error'); }
+    showResult(await res.json());
+    checkStatus();
+  } catch(e) {
+    errEl.textContent = `❌ Gagal terhubung ke API. Pastikan server berjalan di ${API_BASE}. (${e.message})`;
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.classList.remove('loading');
+  }
+}
+
+function showResult(data) {
+  const box = document.getElementById('resultBox');
+  // API returns: status ("Normal"/"Stunted"), risk_score, bmi, message
+  const isS = data.status === 'Stunted';
+  box.className = 'result-box ' + (isS ? 'stunting' : 'normal');
+  document.getElementById('resultEmoji').textContent = isS ? '⚠️' : '✅';
+  document.getElementById('resultLabel').textContent = isS ? 'Terdeteksi Stunting' : 'Status Normal';
+  document.getElementById('resultSub').textContent = data.message || (isS
+    ? 'Anak kemungkinan mengalami stunting. Segera konsultasikan ke tenaga kesehatan.'
+    : 'Tinggi badan anak tergolong normal sesuai usianya.');
+  box.style.display = 'block';
+  // risk_score = probabilitas stunting jika Stunted, probabilitas normal jika Normal
+  const pS = isS ? Math.round(data.risk_score * 100) : Math.round((1 - data.risk_score) * 100);
+  const pN = 100 - pS;
+  setTimeout(() => {
+    document.getElementById('barNormal').style.width   = pN + '%';
+    document.getElementById('barStunting').style.width = pS + '%';
+    document.getElementById('pctNormal').textContent   = pN + '%';
+    document.getElementById('pctStunting').textContent = pS + '%';
+  }, 60);
+}
+
+// Chatbot
+function askChip(q) {
+  document.getElementById('chatInput').value = q;
+  sendChat();
+}
+
+async function sendChat() {
+  const inp = document.getElementById('chatInput');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  addMsg('user', msg); inp.value = '';
+  document.getElementById('sendBtn').disabled = true;
+  const typing = addTyping();
+  try {
+    const res = await fetch(API_BASE + '/chat', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({message: msg})
+    });
+    typing.remove();
+    if (!res.ok) throw new Error();
+    const d = await res.json();
+    addMsg('bot', d.response);
+  } catch {
+    typing.remove();
+    addMsg('bot', '❌ Maaf, tidak bisa merespons saat ini. Pastikan server berjalan.');
+  } finally {
+    document.getElementById('sendBtn').disabled = false;
+    inp.focus();
+  }
+}
+
+function addMsg(role, text) {
+  const el = document.createElement('div');
+  el.className = 'msg ' + role;
+  el.innerHTML = `<div class="sender">${role==='bot'?'StuntBot':'Kamu'}</div>${esc(text)}`;
+  document.getElementById('chatMessages').appendChild(el);
+  scrollC(); return el;
+}
+function addTyping() {
+  const el = document.createElement('div');
+  el.className = 'msg bot';
+  el.innerHTML = '<div class="sender">StuntBot</div><div class="typing"><span></span><span></span><span></span></div>';
+  document.getElementById('chatMessages').appendChild(el);
+  scrollC(); return el;
+}
+function scrollC(){ const c=document.getElementById('chatMessages'); c.scrollTop=c.scrollHeight; }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+</script>
+</body>
+</html>
