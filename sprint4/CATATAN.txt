@@ -1,0 +1,5 @@
+File chatbot.py dihapus karena chat bot sekarang full menggunakan Azure OpenAI o4-mini  
+
+Untuk pertanyaan pada kolom chat AI, hanya bisa menanyakan seputar opsi cepat (misal: apa itu stunting, bagaimana peran orang tua) sehingga belum bisa menjawab studi kasus (saya seorang ibu dengan anak berumur dua tahun...)  
+
+Pengembangan kedepan: sudah bisa menjawab studi kasus dan pertanyaan-pertanyaan seputar stunting lainnya (seperti pertanyaan mengenai menampilkan seluruh posyandu di area tertentu dsb) dengan data terkini/terupdate dan juga restriction agar chatbot fokus hanya ke persoalan stunting
