@@ -38,6 +38,19 @@ Chatbot AI **hanya dapat menjawab pertanyaan seputar opsi cepat**, seperti:
 - [ ] Database kasus stunting
 - [ ] Grafik pertumbuhan anak
 - [ ] Notifikasi pengingat posyandu
-- [ ] Konsultasi dengan ahli gizi
+- [ ] Konsultasi dengan ahli gizi  
 
-## 📁 Struktur File
+
+## 🛠️ Cara Menjalankan
+1. Buat file `.env` dengan isi:
+```env
+AZURE_OPENAI_API_KEY=your_api_key
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_DEPLOYMENT_NAME=o4-mini
+AZURE_OPENAI_API_VERSION=2024-12-01-preview  
+
+2. Install dependencies  
+pip install fastapi uvicorn python-dotenv openai numpy scikit-learn xgboost  
+
+3. Jalankan server  
+python -m uvicorn main:app --port 8000
