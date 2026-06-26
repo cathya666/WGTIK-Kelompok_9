@@ -1,56 +1,85 @@
-# 📝 Catatan Pengembangan Aplikasi StuntCheck
+================================================================================
+                    CATATAN PENGEMBANGAN APLIKASI STUNTCHECK
+================================================================================
 
-## 🔄 Perubahan Arsitektur
-- **File `chatbot.py` dihapus** - Chatbot sekarang terintegrasi penuh menggunakan **Azure OpenAI o4-mini** melalui `main.py`
-- **Konfigurasi Azure** - Semua pengaturan API disimpan dalam file `.env` untuk keamanan
+PERUBAHAN ARSITEKTUR
+--------------------------------------------------------------------------------
+- File chatbot.py dihapus - Chatbot sekarang terintegrasi penuh menggunakan
+  Azure OpenAI o4-mini melalui main.py
+- Konfigurasi Azure - Semua pengaturan API disimpan dalam file .env untuk
+  keamanan
 
-## 🔒 Keamanan
-- **API KEY dan ENDPOINT** tidak ditampilkan dalam repository GitHub ini
-- File `.env` tidak di-upload untuk melindungi informasi sensitif
-- Pastikan untuk membuat file `.env` sendiri dengan konfigurasi Azure OpenAI Anda
+KEAMANAN
+--------------------------------------------------------------------------------
+- API KEY dan ENDPOINT tidak ditampilkan dalam repository GitHub ini
+- File .env tidak di-upload untuk melindungi informasi sensitif
+- Pastikan untuk membuat file .env sendiri dengan konfigurasi Azure OpenAI Anda
 
-## ⚠️ Keterbatasan Saat Ini
-Chatbot AI **hanya dapat menjawab pertanyaan seputar opsi cepat**, seperti:
-- "Apa itu stunting?"
-- "Bagaimana peran orang tua?"
-- "Apa saja penyebab stunting?"
-- "Bagaimana cara mencegah stunting?"
+KETERBATASAN SAAT INI
+--------------------------------------------------------------------------------
+Chatbot AI hanya dapat menjawab pertanyaan seputar opsi cepat, seperti:
+- Apa itu stunting?
+- Bagaimana peran orang tua?
+- Apa saja penyebab stunting?
+- Bagaimana cara mencegah stunting?
 
-**Belum bisa menjawab studi kasus** seperti:
+Belum bisa menjawab studi kasus seperti:
 - "Saya seorang ibu dengan anak berusia dua tahun, bagaimana cara..."
 - Pertanyaan yang memerlukan analisis kontekstual
 
-## 🚀 Rencana Pengembangan Kedepan
+RENCANA PENGEMBANGAN KEDEPAN
+--------------------------------------------------------------------------------
 
-### 1. Peningkatan Kemampuan AI
-- [ ] Menjawab studi kasus dan pertanyaan kontekstual
-- [ ] Menampilkan informasi posyandu terdekat berdasarkan lokasi
-- [ ] Memberikan rekomendasi nutrisi yang dipersonalisasi
-- [ ] Menjawab pertanyaan seputar stunting dengan data terkini
+1. Peningkatan Kemampuan AI
+   - Menjawab studi kasus dan pertanyaan kontekstual
+   - Menampilkan informasi posyandu terdekat berdasarkan lokasi
+   - Memberikan rekomendasi nutrisi yang dipersonalisasi
+   - Menjawab pertanyaan seputar stunting dengan data terkini
 
-### 2. Deployment dan Aksesibilitas
-- [ ] **Deploy ke server publik** - Tidak hanya localhost
-- [ ] **Akses dari perangkat lain** - Bisa diakses dari laptop/PC lain maupun HP
-- [ ] **Responsive design** - Optimal untuk semua ukuran layar
-- [ ] **SSL/HTTPS** - Untuk keamanan data pengguna
+2. Deployment dan Aksesibilitas
+   - Deploy ke server publik - Tidak hanya localhost
+   - Akses dari perangkat lain - Bisa diakses dari laptop/PC lain maupun HP
+   - Responsive design - Optimal untuk semua ukuran layar
+   - SSL/HTTPS - Untuk keamanan data pengguna
 
-### 3. Fitur Tambahan
-- [ ] Database kasus stunting
-- [ ] Grafik pertumbuhan anak
-- [ ] Notifikasi pengingat posyandu
-- [ ] Konsultasi dengan ahli gizi  
+3. Fitur Tambahan
+   - Database kasus stunting
+   - Grafik pertumbuhan anak
+   - Notifikasi pengingat posyandu
+   - Konsultasi dengan ahli gizi
 
+STRUKTUR FILE
+--------------------------------------------------------------------------------
+test/
+├── main.py              # Server utama dengan Azure OpenAI
+├── stunting_app.html    # Frontend aplikasi
+├── model_stunting.pkl   # Model ML prediksi stunting
+├── scaler.pkl           # Scaler untuk normalisasi data
+├── gender_encoder.pkl   # Encoder untuk jenis kelamin
+├── .env                 # Konfigurasi API (tidak di-upload)
+└── CATATAN.txt          # File ini
 
-## 🛠️ Cara Menjalankan
-1. Buat file `.env` dengan isi:
-```env
-AZURE_OPENAI_API_KEY=your_api_key
-AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
-AZURE_OPENAI_DEPLOYMENT_NAME=o4-mini
-AZURE_OPENAI_API_VERSION=2024-12-01-preview  
+CARA MENJALANKAN
+--------------------------------------------------------------------------------
 
-2. Install dependencies  
-pip install fastapi uvicorn python-dotenv openai numpy scikit-learn xgboost  
+1. Buat file .env dengan isi:
 
-3. Jalankan server  
-python -m uvicorn main:app --port 8000
+   AZURE_OPENAI_API_KEY=your_api_key
+   AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+   AZURE_OPENAI_DEPLOYMENT_NAME=o4-mini
+   AZURE_OPENAI_API_VERSION=2024-12-01-preview
+
+2. Install dependencies:
+
+   pip install fastapi uvicorn python-dotenv openai numpy scikit-learn xgboost
+
+3. Jalankan server:
+
+   python -m uvicorn main:app --reload --port 8000
+
+4. Buka browser di http://localhost:8000
+
+================================================================================
+Catatan: Aplikasi ini masih dalam tahap pengembangan. Saran dan masukan sangat
+kami harapkan untuk perbaikan kedepan.
+================================================================================
