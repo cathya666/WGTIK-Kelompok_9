@@ -1,0 +1,43 @@
+# 📝 Catatan Pengembangan Aplikasi StuntCheck
+
+## 🔄 Perubahan Arsitektur
+- **File `chatbot.py` dihapus** - Chatbot sekarang terintegrasi penuh menggunakan **Azure OpenAI o4-mini** melalui `main.py`
+- **Konfigurasi Azure** - Semua pengaturan API disimpan dalam file `.env` untuk keamanan
+
+## 🔒 Keamanan
+- **API KEY dan ENDPOINT** tidak ditampilkan dalam repository GitHub ini
+- File `.env` tidak di-upload untuk melindungi informasi sensitif
+- Pastikan untuk membuat file `.env` sendiri dengan konfigurasi Azure OpenAI Anda
+
+## ⚠️ Keterbatasan Saat Ini
+Chatbot AI **hanya dapat menjawab pertanyaan seputar opsi cepat**, seperti:
+- "Apa itu stunting?"
+- "Bagaimana peran orang tua?"
+- "Apa saja penyebab stunting?"
+- "Bagaimana cara mencegah stunting?"
+
+**Belum bisa menjawab studi kasus** seperti:
+- "Saya seorang ibu dengan anak berusia dua tahun, bagaimana cara..."
+- Pertanyaan yang memerlukan analisis kontekstual
+
+## 🚀 Rencana Pengembangan Kedepan
+
+### 1. Peningkatan Kemampuan AI
+- [ ] Menjawab studi kasus dan pertanyaan kontekstual
+- [ ] Menampilkan informasi posyandu terdekat berdasarkan lokasi
+- [ ] Memberikan rekomendasi nutrisi yang dipersonalisasi
+- [ ] Menjawab pertanyaan seputar stunting dengan data terkini
+
+### 2. Deployment dan Aksesibilitas
+- [ ] **Deploy ke server publik** - Tidak hanya localhost
+- [ ] **Akses dari perangkat lain** - Bisa diakses dari laptop/PC lain maupun HP
+- [ ] **Responsive design** - Optimal untuk semua ukuran layar
+- [ ] **SSL/HTTPS** - Untuk keamanan data pengguna
+
+### 3. Fitur Tambahan
+- [ ] Database kasus stunting
+- [ ] Grafik pertumbuhan anak
+- [ ] Notifikasi pengingat posyandu
+- [ ] Konsultasi dengan ahli gizi
+
+## 📁 Struktur File
